@@ -1,18 +1,20 @@
 // =====================================================
 // collision3p.js
 // 3 Particle Non-Elastic Collision (2D)
-// Mini-framework ala butiran.js (Pak Dudung)
+// Time stepping with explicit TDELT (Euler)
 // =====================================================
 
 // ---------- GLOBAL ----------
 let canvas, ctx;
 let particles = [];
 
-let DT = 0.01;
+let TDELT = 0.01;
 let STEPS = 2000;
 let COEFR = 0.7;
 
 let stepCount = 0;
+let t = 0;
+
 let running = false;
 let timer = null;
 
@@ -60,6 +62,7 @@ window.onload = function () {
 function readParams() {
   particles = [];
   stepCount = 0;
+  t = 0;
 
   const lines = document.getElementById("input").value.split("\n");
 
@@ -69,7 +72,7 @@ function readParams() {
 
     const p = line.split(/\s+/);
 
-    if (p[0] === "DT") DT = parseFloat(p[1]);
+    if (p[0] === "TDELT") TDELT = parseFloat(p[1]);
     if (p[0] === "STEPS") STEPS = parseInt(p[1]);
     if (p[0] === "COEFR") COEFR = parseFloat(p[1]);
 
@@ -90,6 +93,7 @@ function readParams() {
   document.getElementById("log").value =
     "# t  x0 y0 vx0 vy0  x1 y1 vx1 vy1  x2 y2 vx2 vy2\n";
 
+  logData(); // log kondisi awal t = 0
   draw();
 }
 
@@ -119,22 +123,25 @@ function resolveCollision(a, b) {
   b.vy += (j * ny) / b.m;
 }
 
-// ---------- STEP ----------
+// ---------- TIME STEP ----------
 function step() {
   if (!running || stepCount >= STEPS) return;
 
-  particles.forEach(p => p.update(DT));
+  // update posisi (Euler)
+  particles.forEach(p => p.update(TDELT));
 
+  // cek tumbukan
   for (let i = 0; i < particles.length; i++) {
     for (let j = i + 1; j < particles.length; j++) {
       resolveCollision(particles[i], particles[j]);
     }
   }
 
-  draw();
-  logData();
-
+  t += TDELT;
   stepCount++;
+
+  logData();
+  draw();
 }
 
 // ---------- DRAW ----------
@@ -153,9 +160,9 @@ function draw() {
   particles.forEach(p => p.draw());
 }
 
-// ---------- LOGGER ----------
+// ---------- LOGGER (UAS STYLE) ----------
 function logData() {
-  let line = (stepCount * DT).toFixed(4);
+  let line = t.toFixed(4);
 
   particles.forEach(p => {
     line += " " +
@@ -191,7 +198,7 @@ function loadDefault() {
 `# =========================
 # Simulation Parameters
 # =========================
-DT 0.01
+TDELT 0.01
 STEPS 2000
 COEFR 0.7
 
