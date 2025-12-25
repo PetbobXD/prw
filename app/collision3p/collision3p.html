@@ -1,73 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Three-Particle Non-Elastic Collision (1D)</title>
+<title>3-Particle Non-Elastic Collision (1D)</title>
 
 <style>
-body {
-  font-family: monospace;
-  background: #f5f5f5;
-}
-
-h2 {
-  margin-bottom: 5px;
-}
-
-fieldset {
-  margin-bottom: 10px;
-}
-
-label {
-  display: inline-block;
-  width: 80px;
-}
-
-input {
-  width: 80px;
-}
-
-button {
-  margin-right: 5px;
-  margin-top: 5px;
-}
-
-textarea {
-  width: 100%;
-  height: 300px;
-  margin-top: 10px;
-}
+body { font-family: monospace; background:#f5f5f5; }
+canvas { border:1px solid #000; background:#fff; }
+fieldset { margin-bottom:10px; }
+label { display:inline-block; width:70px; }
+input { width:80px; }
+textarea { width:100%; height:200px; }
 </style>
 </head>
 
 <body>
 
-<h2>Three-Particle Non-Elastic Collision (1D)</h2>
-<p>Style follows <b>butiran.js (Pak Dudung)</b></p>
+<h3>Three-Particle Non-Elastic Collision (1D)</h3>
+
+<canvas id="canvas" width="600" height="120"></canvas>
 
 <fieldset>
-<legend>Global Parameters</legend>
+<legend>Global</legend>
 <label>TDELT</label><input id="TDELT" value="0.01"><br>
 <label>COEFR</label><input id="COEFR" value="0.7">
 </fieldset>
 
 <fieldset>
-<legend>Particle Parameters</legend>
+<legend>Particles</legend>
+<b>P1</b>
+<label>M</label><input id="M1" value="1">
+<label>X</label><input id="X1" value="-1">
+<label>V</label><input id="V1" value="1"><br>
 
-<b>Particle 1</b><br>
-<label>M1</label><input id="M1" value="1">
-<label>X1</label><input id="X1" value="-1">
-<label>V1</label><input id="V1" value="1"><br><br>
+<b>P2</b>
+<label>M</label><input id="M2" value="1">
+<label>X</label><input id="X2" value="0">
+<label>V</label><input id="V2" value="0"><br>
 
-<b>Particle 2</b><br>
-<label>M2</label><input id="M2" value="1">
-<label>X2</label><input id="X2" value="0">
-<label>V2</label><input id="V2" value="0"><br><br>
-
-<b>Particle 3</b><br>
-<label>M3</label><input id="M3" value="1">
-<label>X3</label><input id="X3" value="1">
-<label>V3</label><input id="V3" value="0">
+<b>P3</b>
+<label>M</label><input id="M3" value="1">
+<label>X</label><input id="X3" value="1">
+<label>V</label><input id="V3" value="0">
 </fieldset>
 
 <button onclick="read()">Read</button>
