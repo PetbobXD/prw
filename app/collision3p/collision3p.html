@@ -2,99 +2,76 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>collision3p – 3 Particle Non-Elastic Collision (2D)</title>
-
+<title>3-Particle Collision (Non-Elastic)</title>
 <style>
 body {
   margin: 0;
   font-family: monospace;
 }
-
 #container {
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 420px 1fr;
+  grid-template-rows: 300px 1fr;
   height: 100vh;
 }
-
-#left {
+#controls {
   padding: 10px;
-  border-right: 2px solid #aaa;
-  box-sizing: border-box;
+  border-right: 2px solid #ccc;
 }
-
-#right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-textarea {
+#params {
   width: 100%;
-  box-sizing: border-box;
-  resize: none;
+  height: 180px;
 }
-
-#input {
-  height: 45%;
-}
-
-#log {
-  height: 45%;
-  margin-top: 5px;
-}
-
 button {
-  width: 100%;
-  margin-top: 4px;
+  margin: 4px 2px;
 }
-
-canvas {
-  border: 1px solid black;
-  background: white;
+#data {
+  padding: 10px;
+  border-top: 2px solid #ccc;
+  overflow-y: auto;
+}
+#datatable {
+  width: 100%;
+  border-collapse: collapse;
+}
+#datatable th, #datatable td {
+  border: 1px solid #aaa;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+#canvas {
+  background: #fafafa;
 }
 </style>
 </head>
 
 <body>
-
 <div id="container">
 
-<!-- LEFT PANEL -->
-<div id="left">
+  <!-- LEFT TOP -->
+  <div id="controls">
+    <textarea id="params"></textarea><br>
+    <button onclick="readParams()">Read</button>
+    <button onclick="startSim()">Start</button>
+    <button onclick="stopSim()">Stop</button>
+    <button onclick="clearSim()">Clear</button>
+  </div>
 
-<textarea id="input">
-# =========================
-# Simulation Parameters
-# =========================
-TDELT 0.01
-STEPS 2000
-COEFR 0.7
+  <!-- RIGHT -->
+  <canvas id="canvas" width="600" height="500"></canvas>
 
-# =========================
-# Particles
-# x  y  vx  vy  mass  radius
-# =========================
-P -0.6   0.0   1.0  0.0   1.0   0.04
-P  0.0   0.3   0.0  0.0   1.0   0.04
-P  0.0  -0.3   0.0  0.0   1.0   0.04
-</textarea>
-
-<textarea id="log" readonly>
-# t  x0 y0 vx0 vy0  x1 y1 vx1 vy1  x2 y2 vx2 vy2
-</textarea>
-
-<button onclick="clearSim()">Clear</button>
-<button onclick="loadDefault()">Load</button>
-<button onclick="readParams()">Read</button>
-<button onclick="startSim()">Start</button>
-<button onclick="stopSim()">Stop</button>
-
-</div>
-
-<!-- RIGHT PANEL -->
-<div id="right">
-  <canvas id="canvas" width="600" height="400"></canvas>
-</div>
+  <!-- LEFT BOTTOM -->
+  <div id="data">
+    <b>Simulation Data (Δt based)</b>
+    <table id="datatable">
+      <thead>
+        <tr>
+          <th>t</th><th>x</th><th>y</th><th>vx</th><th>vy</th>
+        </tr>
+      </thead>
+      <tbody id="databody"></tbody>
+    </table>
+  </div>
 
 </div>
 
