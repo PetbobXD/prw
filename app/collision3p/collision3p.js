@@ -12,7 +12,8 @@ const ORIGIN = { x: 300, y: 250 };
 
 // ================= PARTICLE =================
 class Particle {
-  constructor(x, y, vx, vy, m, r) {
+  constructor(id, x, y, vx, vy, m, r) {
+    this.id = id;
     this.x = x;
     this.y = y;
     this.vx = vx;
@@ -65,6 +66,8 @@ function readParams() {
   clearTables();
 
   const lines = document.getElementById("params").value.split("\n");
+  let pid = 0;
+
   lines.forEach(line => {
     line = line.trim();
     if (!line || line.startsWith("#")) return;
@@ -73,7 +76,7 @@ function readParams() {
     if (p[0] === "COEFR") COEFR = parseFloat(p[1]);
     if (p[0] === "P") {
       particles.push(new Particle(
-        +p[1], +p[2], +p[3], +p[4], +p[5], +p[6]
+        pid++, +p[1], +p[2], +p[3], +p[4], +p[5], +p[6]
       ));
     }
   });
@@ -94,12 +97,15 @@ function resolveCollision(a, b) {
   const dvx = b.vx - a.vx;
   const dvy = b.vy - a.vy;
   const vn = dvx * nx + dvy * ny;
-  if (vn > 0) return;
 
-  // ===== SAVE VELOCITY BEFORE =====
+  // HARUS SALING MENDEKAT
+  if (vn >= 0) return;
+
+  // ===== SIMPAN SEBELUM =====
   const aBefore = { vx: a.vx, vy: a.vy };
   const bBefore = { vx: b.vx, vy: b.vy };
 
+  // ===== IMPULSE =====
   const j = -(1 + COEFR) * vn / (1 / a.m + 1 / b.m);
 
   a.vx -= (j * nx) / a.m;
@@ -107,19 +113,19 @@ function resolveCollision(a, b) {
   b.vx += (j * nx) / b.m;
   b.vy += (j * ny) / b.m;
 
-  // ===== LOG COLLISION =====
-  logCollision(aBefore, a, "A");
-  logCollision(bBefore, b, "B");
+  // ===== LOG =====
+  logCollision(time, a.id, aBefore, a);
+  logCollision(time, b.id, bBefore, b);
 }
 
 // ================= LOGGING =================
-function logCollision(before, after, label) {
+function logCollision(t, id, before, after) {
   const row = document.createElement("tr");
   row.innerHTML =
-    `<td>${time.toFixed(3)}</td>
-     <td>${label}</td>
-     <td>(${before.vx.toFixed(3)} i , ${before.vy.toFixed(3)} j)</td>
-     <td>(${after.vx.toFixed(3)} i , ${after.vy.toFixed(3)} j)</td>`;
+    `<td>${t.toFixed(3)}</td>
+     <td>${id}</td>
+     <td>(${before.vx.toFixed(3)} î , ${before.vy.toFixed(3)} ĵ)</td>
+     <td>(${after.vx.toFixed(3)} î , ${after.vy.toFixed(3)} ĵ)</td>`;
   document.getElementById("collisionbody").appendChild(row);
 }
 
